@@ -1,0 +1,97 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFtest"
+        xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:c1="http://schemas.componentone.com/winfx/2006/xaml" x:Name="mainWindow" x:Class="WPFtest.MainWindow"
+        mc:Ignorable="d" d:DesignWidth="983.992" d:DesignHeight="438.504"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        >
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Loaded">
+            <BeginStoryboard>
+                <Storyboard Duration="00:00:3" Storyboard.TargetProperty="Opacity">
+                    <DoubleAnimation From="0" To="1"/>
+                </Storyboard>
+            </BeginStoryboard>
+
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid >
+        <ui:SimpleStackPanel Margin="12" Spacing="24" d:IsHidden="true" >
+            <TextBlock x:Name="titleLabel" Text="UiPath By Coexya" Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" FontFamily="Segoe UI Symbol" Visibility="Visible" Foreground="#FF0078D7" VerticalAlignment="Center" >
+                <TextBlock.Effect>
+                    <hc:BrightnessEffect/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock x:Name="subtitleLabel" Text="External App Secret" HorizontalAlignment="Center" Margin="0,1,0,0" VerticalAlignment="Top" Width="132" />
+            <hc:PasswordBox x:Name="secretInput" BorderBrush="#FF7A7A7A" HorizontalAlignment="Center" Width="264" Margin="0,0,0,8" VerticalAlignment="Center" />
+            <Button x:Name="startButton" Content="Get Started" Style="{StaticResource AccentButtonStyle}" Margin="0,-24,0,0" VerticalAlignment="Top" Width="266" Click="Button_Click_1" HorizontalAlignment="Center" >
+                <Button.Triggers>
+                    <EventTrigger  RoutedEvent="Button.Click">
+                        <EventTrigger.Actions>
+                            <BeginStoryboard >
+                                <Storyboard >
+                                    <DoubleAnimation  Storyboard.TargetName="mainWindow"
+                                      Storyboard.TargetProperty = "(Window.Height)"
+                                        To="800" Duration="0:0:5"/>
+                                    <Storyboard >
+
+                                        <DoubleAnimation  Storyboard.TargetName="mainWindow"
+                                      Storyboard.TargetProperty = "(Window.Width)"
+                                        To="1600" Duration="0:0:5"/>
+                                    </Storyboard>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger.Actions>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <hc:CirclePanel Margin="7,-42,-6,88">
+                <hc:WaveProgressBar x:Name="waveBubble" HorizontalAlignment="Left" Height="85" VerticalAlignment="Top" Width="41" Margin="-103,-52,0,0" Value="50" Opacity="0"/>
+            </hc:CirclePanel>
+        </ui:SimpleStackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <!--Creating Sub-Grid in Column 0-->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Content="Button1" Grid.Row="0"></Button>
+                <Button Content="Button2" Grid.Row="2"></Button>
+                <GridSplitter HorizontalAlignment="Stretch"   
+                          VerticalAlignment="Center"   
+                          Grid.Row="1" Height="4" Background="Black"/>
+            </Grid>
+            <!--Creating Sub-Grid in Column 2-->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button Content="Button3" Grid.Row="0"></Button>
+                <Button Content="Button4" Grid.Row="1"></Button>
+            </Grid>
+            <GridSplitter HorizontalAlignment="Center"   
+                      VerticalAlignment="Stretch"   
+                      Grid.Column="1" Grid.Row="0"   
+                      Grid.RowSpan="3" Width="4" Background="Black">
+            </GridSplitter>
+        </Grid>
+    </Grid>
+    
+</Window>
