@@ -1,0 +1,14 @@
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\bin\Debug\UITree Watcher.exe.config
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\bin\Debug\UITree Watcher.exe
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\bin\Debug\UITree Watcher.pdb
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\bin\Debug\AutomaticGraphLayout.dll
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\bin\Debug\AutomaticGraphLayout.Drawing.dll
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\bin\Debug\Microsoft.Msagl.GraphViewerGdi.dll
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree Watcher.csproj.AssemblyReference.cache
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree_Watcher.Properties.Resources.resources
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree Watcher.csproj.GenerateResource.cache
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree Watcher.csproj.CoreCompileInputs.cache
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree Watcher.csproj.CopyComplete
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree Watcher.exe
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree Watcher.pdb
+C:\Users\gaelg\source\repos\UITree Watcher\UITree Watcher\obj\Debug\UITree_Watcher.Form1.resources
