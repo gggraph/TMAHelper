@@ -235,7 +235,7 @@ namespace UITree_Watcher
             }
 
         }
-        private Node FindCadetInBranch(List<Node> branch)
+        private Node FindFirstCadet(List<Node> branch)
         {
             foreach (Node n in branch)
             {
@@ -256,6 +256,30 @@ namespace UITree_Watcher
                     return n;
             }
             return null;
+        }
+        // Give better result than cadet
+        private int MeasureBranchHeightFromNode(Node curr, List<Node> branch, int h) 
+        {
+            h++;
+            if (curr.InEdges.Count() > 0)
+                h = MeasureBranchHeightFromNode(
+                    curr.InEdges.FirstOrDefault().SourceNode, branch, h
+                    );
+
+            return h;
+        }
+        private Node FindLowestNodeInBranch(List<Node> branch) 
+        {
+            List<Tuple<int, int>> r = new List<Tuple<int, int>>();
+
+            List <Node> branchList = branch.ToList();
+
+            for (int i = 0; i < branch.Count; i++) 
+                r.Add(new Tuple<int,int>(i,MeasureBranchHeightFromNode(branch[i], branch, 0)));
+
+            r.Sort((x, y) => y.Item2.CompareTo(x.Item2));
+
+            return branchList[r[0].Item1] ;
         }
 
         #endregion
@@ -378,7 +402,7 @@ namespace UITree_Watcher
                     return;
                 List<Node> nodes = GetAllUIElementsAboveScreenPosition(p.X, p.Y);
                 // find the children'est' node.
-                Node cadet = FindCadetInBranch(nodes);
+                Node cadet = FindLowestNodeInBranch(nodes);
                 if (cadet == null)
                     return;
 
