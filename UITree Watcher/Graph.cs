@@ -18,7 +18,6 @@ using System.Threading;
 using System.Reflection;
 using System.Diagnostics;
 
-
 namespace UITree_Watcher
 {
    
@@ -56,6 +55,10 @@ namespace UITree_Watcher
 
         private bool uiTracerEnabled = false;
 
+        private Form ghostCanvas;
+
+        private Rectangle uiTraceRect;
+
         public UiTreeWatcher(Control ctrl, ViewStyle style) 
         {
             mContainer = ctrl;
@@ -63,7 +66,8 @@ namespace UITree_Watcher
             InitViewer(new Microsoft.Msagl.GraphViewerGdi.GViewer());
             InitViewerToolBar();
             mContainer.Controls.Add(mViewer);
-            InstallThreads();
+            InitGhostCanvas();
+            InstallWorkerTimer();
         }
 
         #endregion
@@ -284,46 +288,31 @@ namespace UITree_Watcher
 
         #endregion
 
-        #region Threading
+        #region Workers
 
-        private void InstallThreads() 
+        private void InstallWorkerTimer() 
         {
-            new Thread(ElementDetectionThread) { IsBackground = true }.Start(mViewer.FindForm());
-            new Thread(GraphWorkerThread) { IsBackground = true }.Start(mViewer.FindForm());
+            System.Windows.Forms.Timer _timer = new System.Windows.Forms.Timer() { Interval = 2000, Enabled = true };
+            _timer.Tick += new EventHandler(GraphWorkerTick);
+
         }
-        private void GraphWorkerThread(object arg)
+        private void GraphWorkerTick(object sender, EventArgs e)
         {
-            Form win = (Form)arg;
-            Thread.Sleep(1000);
-            while (true)
+            if (mViewer.Graph != null)
             {
-                Thread.Sleep(2000);
-                win.Invoke(new MethodInvoker(delegate
-                {
-                    if (mViewer.Graph != null)
-                    {
-                        Refresh();
-                    }
-
-                }));
+                Refresh();
             }
         }
-        private void ElementDetectionThread(object arg) 
+    
+        void ElementDetectionTick(object sender, EventArgs e)
         {
-            Form win = (Form)arg;
-            Thread.Sleep(1000);
-            while (true) 
-            {
-                Thread.Sleep(200);
-                win.Invoke(new MethodInvoker(delegate
-                {
-                    if (mViewer.Graph != null && uiTracerEnabled)
-                    {
-                        HighlightElementAboveMouse();
-                    }
+            if (mViewer.Graph != null && uiTracerEnabled)
+                HighlightElementAboveMouse();
 
-                }));
-            }
+            ghostCanvas.Location = new System.Drawing.Point(uiTraceRect.X, uiTraceRect.Y);
+            ghostCanvas.Size = new System.Drawing.Size(uiTraceRect.Width, uiTraceRect.Height);
+            if (!ghostCanvas.Visible)
+                ghostCanvas.Show();
         }
 
         #endregion
@@ -431,6 +420,16 @@ namespace UITree_Watcher
 
         private void HighLightUIElement(AutomationElement element, GViewer viewer) 
         {
+            uiTraceRect = new System.Drawing.Rectangle(
+                  (int)element.Current.BoundingRectangle.X,
+                  (int)element.Current.BoundingRectangle.Y,
+                  (int)element.Current.BoundingRectangle.Width,
+                  (int)element.Current.BoundingRectangle.Height);
+           
+        }
+        private void HightLightUIElementFromU32(AutomationElement element, GViewer viewer) 
+        {
+
             WinAPI.RECT winRect;
             WinAPI.GetWindowRect((IntPtr)currentTree.handle, out winRect);
             WinAPI.MoveWindow((IntPtr)currentTree.handle, winRect.Left, winRect.Top);
@@ -529,6 +528,27 @@ namespace UITree_Watcher
         {
             
         }
+        private void DiagButton_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Diagnostic and watchers are not fully done... Please wait advanced release...");
+        }
+
+        private void TraceButton_Click(object sender, EventArgs e)
+        {
+            ToolStripButton btn = (ToolStripButton)sender;
+            if (!uiTracerEnabled)
+                btn.Image = Image.FromFile("trace_disab.png");
+            else
+                btn.Image = Image.FromFile("trace_enab.png");
+            uiTracerEnabled = !uiTracerEnabled;
+
+        }
+        
+        void GhostForm_Paint(object sender, PaintEventArgs e)
+        {
+            Form mForm = (Form)sender;
+            e.Graphics.DrawRectangle(new Pen(System.Drawing.Color.Red, 10), new Rectangle(0, 0, uiTraceRect.Width, uiTraceRect.Height));
+        }
         #endregion
 
         #region Controls
@@ -611,21 +631,27 @@ namespace UITree_Watcher
             tools.Items.Add(diagButton);
         }
 
-        private void DiagButton_Click(object sender, EventArgs e)
+        private void InitGhostCanvas() 
         {
-            MessageBox.Show("Diagnostic and watchers are not fully done... Please wait advanced release...");
+            ghostCanvas = new Form()
+            {
+                TopMost = true,
+                ShowInTaskbar = false,
+                FormBorderStyle = FormBorderStyle.None,
+                BackColor = System.Drawing.Color.LightGreen,
+                TransparencyKey = System.Drawing.Color.LightGreen,
+                Width = 100,
+                Height = 100,
+                
+        };
+            ghostCanvas.Paint += new PaintEventHandler(GhostForm_Paint);
+            System.Windows.Forms.Timer _timer = new System.Windows.Forms.Timer() { Interval = 20, Enabled = true };
+            _timer.Tick += new EventHandler(ElementDetectionTick);
         }
+        
 
-        private void TraceButton_Click(object sender, EventArgs e)
-        {
-            ToolStripButton btn = (ToolStripButton)sender;
-            if (!uiTracerEnabled)
-                btn.Image = Image.FromFile("trace_disab.png");
-            else
-                btn.Image = Image.FromFile("trace_enab.png");
-            uiTracerEnabled = !uiTracerEnabled;
 
-        }
+
         #endregion
     }
 
